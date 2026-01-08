@@ -2,7 +2,19 @@
   "name": "skia-seekbar",
   "version": "0.1.0",
   "dependencies": [
-      "skia",
-      "sdl3"
+    {
+      "name": "skia",
+      "features": [
+        "dng",
+        "gl",
+        "harfbuzz",
+        "icu",
+        "jpeg",
+        "png",
+        "webp",
+        "freetype"
+      ]
+    },
+    "sdl3"
   ]
 }

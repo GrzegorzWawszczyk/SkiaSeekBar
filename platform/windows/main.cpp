@@ -1,7 +1,10 @@
 #define SDL_MAIN_HANDLED
-#include <SDL3/SDL.h>
+
 #include <iostream>
-#include "app.hpp"
+
+#include <SDL3/SDL.h>
+
+#include "App.hpp"
 
 int main(int, char**) {
     ssb::core::App app;
@@ -10,6 +13,8 @@ int main(int, char**) {
         std::cerr << "App init failed" << std::endl;
         return 1;
     }
+
+    app.InitScene();
     app.StartLoop();
 
     return 0;

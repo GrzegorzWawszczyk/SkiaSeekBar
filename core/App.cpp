@@ -18,11 +18,15 @@ namespace ssb::core
 		m_renderer = std::make_unique<Renderer>();
 		m_inputHandler = std::make_unique<SDLInputHandler>(m_renderer->getWindowWidth(), m_renderer->getWindowHeight());
 
+
+		return true;
+	}
+
+	void App::InitScene()
+	{
 		m_seekBarScene = std::make_shared<SeekBarScene>();
 		m_renderer->setDrawable(m_seekBarScene);
 		m_inputHandler->setInteractive(m_seekBarScene);
-
-		return true;
 	}
 
 	void App::StartLoop()

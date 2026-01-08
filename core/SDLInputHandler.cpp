@@ -7,7 +7,7 @@ namespace ssb::core
 {
 	SDLInputHandler::SDLInputHandler(int windowWidth, int windowHeight)
 		: m_defaultInteractive(nullptr)
-		, m_reservedInput(std::nullopt)
+		, m_reservedInputs()
 		, m_windowWidth(windowWidth)
 		, m_windowHeight(windowHeight)
 	{		
@@ -68,25 +68,37 @@ namespace ssb::core
 			return;
 		}
 
-		InputEventResult inputEventResult;
-		const auto reservedInput = m_reservedInput.value_or({});
-
-		if (reservedInput.inputReservingInteractive)
+		auto found = std::ranges::find_if(m_reservedInputs, [&inputPointerEvent](const ReservedInput& reservedInput)
 		{
-			inputEventResult = reservedInput.inputReservingInteractive->tryConsumeInput(inputPointerEvent, reservedInput.xOffset, reservedInput.yOffset);
+			return reservedInput.id == inputPointerEvent.id;
+		});
+
+		InputEventResult inputEventResult;
+		if (found != m_reservedInputs.end())
+		{
+			inputEventResult = found->inputReservingInteractive->tryConsumeInput(inputPointerEvent, found->xOffset, found->yOffset);
 		}
 		else
 		{
 			inputEventResult = m_defaultInteractive->tryConsumeInput(inputPointerEvent);
 		}
 
+
+
 		if (inputEventResult.consumed && inputEventResult.reservedInput)
 		{
-			m_reservedInput = inputEventResult.reservedInput;
+			if (found != m_reservedInputs.end())
+			{
+				*found = inputEventResult.reservedInput.value();
+			}
+			else
+			{
+				m_reservedInputs.push_back(inputEventResult.reservedInput.value());
+			}
 		}
-		else
+		else if (found != m_reservedInputs.end())
 		{
-			m_reservedInput = std::nullopt;
+			m_reservedInputs.erase(found);
 		}
 	}
 }

@@ -8,12 +8,15 @@
 
 namespace ssb::core
 {
-    ssb::core::Button::Button(unsigned int width, unsigned int height, int x, int y, bool visible, float opacity)
-        : UIItem(width, height, x, y, visible, opacity)
+    Button::Button(unsigned int width, unsigned int height, int x, int y, std::string text, Callback clickCallback)
+        : UIItem(width, height, x, y)
+        , m_label(std::make_shared<Label>(width, height, 0, 0, text))
         , m_pressed(false)
         , m_color(SK_ColorLTGRAY)
-        , m_pressedColor(SK_ColorRED)
+        , m_pressedColor(SK_ColorGRAY)
+        , m_clickCallback(clickCallback)
     {
+        addChild(m_label);
     }
 
     bool Button::hitTest(const InputPointerEvent& inputPointerEvent, int xOffset, int yOffset) const
@@ -31,13 +34,11 @@ namespace ssb::core
 
     void Button::onInputPointerDown(const InputPointerEvent& inputPointerEvent)
     {
-        //SDL_Log("onInputPointerDown x= %i, y= %i, id= %i", inputPointerEvent.x, inputPointerEvent.y, inputPointerEvent.id);
         m_pressed = true;
     }
 
     void Button::onInputPointerUp(const InputPointerEvent& inputPointerEvent, bool stillIn)
     {
-        //SDL_Log("onInputPointerUp x= %i, y= %i, id= %i, stillIn= %i, this= %p", inputPointerEvent.x, inputPointerEvent.y, inputPointerEvent.id, stillIn, this);
         if (m_pressed && stillIn)
         {
             clicked();
@@ -45,25 +46,10 @@ namespace ssb::core
         m_pressed = false;
     }
 
-    //void Button::onInputPointerMove(const InputPointerEvent& inputPointerEvent, bool stillIn)
-    //{
-    //    SDL_Log("onInputPointerMove x= %i, y= %i, id= %i, stillIn= %i, this= %p", inputPointerEvent.x, inputPointerEvent.y, inputPointerEvent.id, stillIn, this);
-    //    if (m_pressed)
-    //    {
-    //        if (stillIn)
-    //        {
-    //            SDL_Log("DRAGGING INSIDE");
-    //        }
-    //        else
-    //        {
-    //            SDL_Log("DRAGGING OUTSIDE");
-    //        }
-    //    }
-    //}
-
     void Button::clicked()
     {
         SDL_Log("CLICK");
+        m_clickCallback();
     }
 
     void Button::drawItem(SkCanvas* canvas)
@@ -78,40 +64,16 @@ namespace ssb::core
         SkRRect rrect;
         rrect.setRectXY(inner, radius, radius);
 
-        SkPaint p;
+        SkPaint paint;
 
-        p.setAntiAlias(true);
-        p.setStyle(SkPaint::kFill_Style);
-        p.setColor(m_pressed ? m_pressedColor : m_color);
-        canvas->drawRRect(rrect, p);
+        paint.setAntiAlias(true);
+        paint.setStyle(SkPaint::kFill_Style);
+        paint.setColor(m_pressed ? m_pressedColor : m_color);
+        canvas->drawRRect(rrect, paint);
 
-        p.setStyle(SkPaint::kStroke_Style);
-        p.setStrokeWidth(strokeWidth);
-        p.setColor(SK_ColorBLACK);
-        canvas->drawRRect(rrect, p);
-
-
-
-        ///text
-        const char* text = "Volume";
-
-sk_sp<SkTypeface> typeface = SkTypeface::MakeDefault();
-
-SkFont font(typeface, 16.0f);
-font.setEdging(SkFont::Edging::kSubpixelAntiAlias);
-
-
-        SkPaint textPaint;
-        textPaint.setAntiAlias(true);
-        textPaint.setColor(SK_ColorBLACK);
-
-        SkRect textBounds;
-        font.measureText(text, strlen(text), SkTextEncoding::kUTF8, &textBounds);
-
-        float textX = rect.centerX() - textBounds.width() / 2 - textBounds.left();
-        float textY = rect.centerY() + textBounds.height() / 2 - textBounds.bottom();
-
-        canvas->drawString(text, textX, textY, font, textPaint);
-
+        paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(strokeWidth);
+        paint.setColor(SK_ColorBLACK);
+        canvas->drawRRect(rrect, paint);
     }
 }

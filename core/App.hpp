@@ -19,6 +19,7 @@ namespace ssb::core
 		App& operator=(App&&) = delete;
 
 		bool Init();
+		void InitScene();
 		void StartLoop();
 
 	private:

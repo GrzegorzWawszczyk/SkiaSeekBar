@@ -9,8 +9,6 @@
 
 namespace ssb::core
 {
-
-
 	class SDLInputHandler {
 	public:
 		SDLInputHandler(int windowWidth, int windowHeight);
@@ -26,8 +24,7 @@ namespace ssb::core
 
 	private:
 		std::shared_ptr<Interactive> m_defaultInteractive;
-		std::optional<ReservedInput> m_reservedInput;
-		//std::shared_ptr<Interactive> m_priorityInteractive;
+		std::vector<ReservedInput> m_reservedInputs;
 		unsigned int m_windowWidth;
 		unsigned int m_windowHeight;
 	};

@@ -60,7 +60,7 @@ namespace ssb::core
 					break;
             }
 			std::shared_ptr<Interactive> thisReservingInput = reservingInput() ? shared_from_this() : nullptr;
-			return { true, std::make_optional<ReservedInput>(thisReservingInput, xOffset, yOffset) };
+			return { true, thisReservingInput ? std::make_optional<ReservedInput>(thisReservingInput, xOffset, yOffset, inputPointerEvent.id) : std::nullopt };
         }
 
 		return { false, std::nullopt };

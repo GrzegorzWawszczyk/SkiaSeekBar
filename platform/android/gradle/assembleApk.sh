@@ -5,6 +5,7 @@ MODE=${1:-debug}
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ANDROID_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 # ABI które obsługujemy
 ABIS=("arm64-v8a")

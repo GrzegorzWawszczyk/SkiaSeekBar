@@ -13,7 +13,7 @@ namespace ssb::core
         Type type;
         int x = 0;
         int y = 0;
-        int id = 0; // 0 = mouse, >0 = finger
+        int id = 0;
     };
 
     struct ReservedInput
@@ -21,6 +21,7 @@ namespace ssb::core
         std::shared_ptr<Interactive> inputReservingInteractive = nullptr;
         int xOffset = 0;
         int yOffset = 0;
+        int id = 0;
     };
 
     struct InputEventResult

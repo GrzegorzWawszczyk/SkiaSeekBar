@@ -2,7 +2,8 @@ add_library(core STATIC
     App.hpp App.cpp
     Button.hpp Button.cpp
     Drawable.hpp Drawable.cpp
-    Interactive.hpp Interactive.cpp
+    Interactive.hpp
+    Label.hpp Label.cpp
     Rect.hpp Rect.cpp
     Renderer.hpp Renderer.cpp
     SDLInputHandler.hpp SDLInputHandler.cpp
