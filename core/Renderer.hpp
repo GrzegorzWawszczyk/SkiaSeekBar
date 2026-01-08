@@ -1,36 +1,43 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include <SDL3/SDL.h>
-#include <include/core/SkSurface.h>
-#include <include/core/SkCanvas.h>
-#ifdef __ANDROID__
-#include <include/gpu/ganesh/GrDirectContext.h>
-#endif
+
+#include "include/core/SkRefCnt.h"
+
+#include "Drawable.hpp"
+
+class SkCanvas;
+class SkSurface;
 
 namespace ssb::core
 {
     class Renderer
     {
     public:
-        //#ifdef __ANDROID__
-            //Renderer(); // Android: u¿ywa SDLActivity GL context
-        //#else
-        Renderer(); // Windows
-        //#endif
-
-
-            //Renderer(); // Android: u¿ywa SDLActivity GL context
-
+        Renderer();
         ~Renderer();
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
+        Renderer(Renderer&&) = delete;
+        Renderer& operator=(Renderer&&) = delete;
 
-        //void attachSDL(SDL_Renderer* r);
         void draw();
         void presentToSDL();
+        void setDrawable(std::shared_ptr<Drawable> drawable);
+
+        int getWindowWidth() const;
+        int getWindowHeight() const;
 
     private:
+        int m_windowWidth;
+        int m_windowHeight;
         SDL_Window* m_window = nullptr;
-        sk_sp<SkSurface> m_surface;
         SDL_Renderer* m_sdlRenderer = nullptr;
         SDL_Texture* m_texture = nullptr;
+        sk_sp<SkSurface> m_surface;
+        std::shared_ptr<Drawable> m_drawable;
     };
 }
