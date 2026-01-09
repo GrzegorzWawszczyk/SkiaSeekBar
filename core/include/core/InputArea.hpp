@@ -27,6 +27,7 @@ namespace ssb::core
 	private:
 		uint64_t m_lastClickTime = 0;
 		bool m_waitingForClick = false;
+		bool m_waitingForDoubleClick = false;
 		InputAreaCallback m_clickCallback;
 		InputAreaCallback m_doubleClickCallback;
 	};

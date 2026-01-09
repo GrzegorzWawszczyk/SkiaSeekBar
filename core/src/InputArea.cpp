@@ -31,28 +31,26 @@ namespace ssb::core
 
     void InputArea::onInputPointerUp(const InputPointerEvent& inputPointerEvent, int xOffset, int yOffset)
     {
-        const auto pressed = reservingInput();
-        if (!pressed || !hitTest(inputPointerEvent, xOffset, yOffset))
-        {
+        if (!reservingInput() || !hitTest(inputPointerEvent, xOffset, yOffset)) {
             clearSavedInputId();
             return;
         }
 
         uint64_t now = SDL_GetTicks();
 
-        if (now - m_lastClickTime <= kDoubleClickThreshold)
-        {
+        if ((m_waitingForDoubleClick || m_waitingForClick) && now - m_lastClickTime <= kDoubleClickThreshold) {
             if (m_doubleClickCallback)
+            {
                 m_doubleClickCallback();
+            }
 
-            m_lastClickTime = 0; 
             m_waitingForClick = false;
+            m_waitingForDoubleClick = true;
         }
-        else
-        {
-            m_lastClickTime = now;
+        else {
             m_waitingForClick = true;
         }
+        m_lastClickTime = now;
 
         clearSavedInputId();
     }
@@ -69,15 +67,14 @@ namespace ssb::core
 
     void InputArea::drawItem(SkCanvas* canvas)
     {
-        if (m_waitingForClick)
-        {
+        if (m_waitingForClick) {
             uint64_t now = SDL_GetTicks();
-            if (now - m_lastClickTime > kDoubleClickThreshold)
-            {
+            if (now - m_lastClickTime > kDoubleClickThreshold) {
                 if (m_clickCallback)
                     m_clickCallback();
 
                 m_waitingForClick = false;
+                m_lastClickTime = 0;
             }
         }
     }
