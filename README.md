@@ -8,7 +8,7 @@ Custom C++ video seek bar with Skia & SDL3, mimicking YouTube-style segments and
 
 - 🎨 Rendering with [Skia](https://skia.org/) and [SDL3](https://www.libsdl.org/)
 - ⏩ YouTube-style skip by double-click (10s forward/back)
-- 🖱️📱 Supports mouse(desktop), and touch(android) input
+- 🖱️📱 Supports mouse(desktop), and touch(android) input (full support for multitouch)
 - 📱💻Cross-platform: Android & Windows
 
 ---
@@ -95,4 +95,11 @@ buildAndroid.sh
 buildAndroid.sh debug
 buildAndroid.sh release
 ```
+
 configures projects, builds them, packs to apk (in build/android/apk), with gradle and script assembleApk.sh.
+
+## App Content
+
+![Sreenshot](https://drive.usercontent.google.com/download?id=1vXQwYFn0kKUToXapHkDEscgsvIl7Naex)
+
+Application is a Seekbar inspired by Youtube ones. At start user can configure duration of playback, chapter count, and their distribution. SeekBar is rendered with provided settings and user can interact with SeekBar.
