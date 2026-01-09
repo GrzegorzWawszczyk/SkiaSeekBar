@@ -4,8 +4,6 @@
 #include <numeric>
 #include <random>
 
-#include <SDL3/SDL.h>
-
 #include <core/SkCanvas.h>
 #include <core/SkFont.h>
 #include <core/SkRRect.h>
@@ -21,14 +19,16 @@ namespace
 
 namespace ssb::core
 {
-    SeekBar::SeekBar(unsigned int width, unsigned int height, int x, int y, unsigned int maxMsecs, SeekBarCallback currentMsecsChangeCallback,
+    SeekBar::SeekBar(unsigned int width, unsigned int height, int x, int y, unsigned int maxMsecs,
         unsigned int chapterCount, bool randomChapterDistribution)
         : UIItem(width, height, x, y)
         , m_maxMsecs(maxMsecs)
         , m_currentMsecs(0)
-        , m_currentMsecsChangeCallback()
+        , m_currentMsecsChangeCallback(nullptr)
+        , m_inputCallback(nullptr)
+        , m_activePlayback(false)
+        , m_indeterminateOffset(0.0f)
     {
-        setCurrentMsecs(0, true);
         setChaptersInfo(chapterCount, randomChapterDistribution);
     }
 
@@ -48,25 +48,33 @@ namespace ssb::core
 
     void SeekBar::onInputPointerDown(const InputPointerEvent& inputPointerEvent, int xOffset, int yOffset)
     {
-       auto normalizedX = inputPointerEvent.x - xOffset - m_x;
-       auto normalizedY = inputPointerEvent.y - yOffset - m_y;
-       const auto position = std::max(static_cast<float>(normalizedX) / m_width, 0.0f);
-       setCurrentMsecs(static_cast<int>(std::round(position * m_maxMsecs)));
-       saveInputId(inputPointerEvent.id);
+        if (m_inputCallback)
+        {
+            m_inputCallback(true);
+        }
+        auto normalizedX = inputPointerEvent.x - xOffset - m_x;
+        auto normalizedY = inputPointerEvent.y - yOffset - m_y;
+        const auto position = std::max(static_cast<float>(normalizedX) / m_width, 0.0f);
+        setCurrentMsecsPrivate(static_cast<int>(std::round(position * m_maxMsecs)));
+        saveInputId(inputPointerEvent.id);
     }
 
     void SeekBar::onInputPointerUp(const InputPointerEvent& inputPointerEvent, int xOffset, int yOffset)
     {
-       clearSavedInputId();
+        if (m_inputCallback)
+        {
+            m_inputCallback(false);
+        }
+        clearSavedInputId();
     }
 
     void SeekBar::onInputPointerMove(const InputPointerEvent& inputPointerEvent, int xOffset, int yOffset)
     {
-       const auto dragging = reservingInput();
-       if (dragging)
-       {
-           onInputPointerDown(inputPointerEvent, xOffset, yOffset);
-       }
+        const auto dragging = reservingInput();
+        if (dragging)
+        {
+            onInputPointerDown(inputPointerEvent, xOffset, yOffset);
+        }
     }
 
     void SeekBar::drawItem(SkCanvas* canvas)
@@ -180,13 +188,26 @@ namespace ssb::core
         }
     }
 
+    void SeekBar::setCurrentMsecsPrivate(unsigned int msecs)
+    {
+        msecs = std::clamp(msecs, 0u, m_maxMsecs);
+        if (msecs != m_currentMsecs)
+        {
+            m_currentMsecs = msecs;
+            if (m_currentMsecsChangeCallback)
+            {
+                m_currentMsecsChangeCallback(m_currentMsecs);
+            }
+        }
+    }
+
     void SeekBar::setMaxMsecs(unsigned int msecs)
     {
-        msecs = std::max(msecs, 1u);
+        msecs = std::max(msecs, 0u);
         if (msecs != m_maxMsecs)
         {
             m_maxMsecs = msecs;
-            setCurrentMsecs(0, true);
+            setCurrentMsecs(0);
         }
     }
 
@@ -229,16 +250,28 @@ namespace ssb::core
         }
     }
 
-    void SeekBar::setCurrentMsecs(unsigned int msecs, bool force)
+    void SeekBar::addCurrentMsecsChangedCallback(SeekBarPositionCallback callback)
     {
+        m_currentMsecsChangeCallback = callback;
+    }
+
+    void SeekBar::addOnInputCallback(SeekBarInputCallback callback)
+    {
+        m_inputCallback = callback;
+    }
+
+    void SeekBar::setCurrentMsecs(unsigned int msecs)
+    {
+        const auto duringInteraction = reservingInput();
+        if (duringInteraction)
+        {
+            return;
+        }
+
         msecs = std::clamp(msecs, 0u, m_maxMsecs);
         if (msecs != m_currentMsecs)
         {
             m_currentMsecs = msecs;
-            if (m_currentMsecsChangeCallback)
-            {
-                m_currentMsecsChangeCallback(m_currentMsecs);
-            }
         }
     }
 

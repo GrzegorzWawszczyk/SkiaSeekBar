@@ -1,7 +1,5 @@
 ﻿#include "Slider.hpp"
 
-#include <SDL3/SDL.h>
-
 #include <core/SkCanvas.h>
 #include <core/SkFont.h>
 #include <core/SkRRect.h>

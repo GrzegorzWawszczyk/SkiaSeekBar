@@ -1,7 +1,5 @@
 #include "SeekBarScene.hpp"
 
-#include <SDL3/SDL.h>
-
 #include <core/SkCanvas.h>
 
 #include "SeekBarSettings.hpp"

@@ -2,8 +2,6 @@
 
 #include <format>
 
-#include <SDL3/SDL.h>
-
 #include <core/SkCanvas.h>
 
 #include "Button.hpp"

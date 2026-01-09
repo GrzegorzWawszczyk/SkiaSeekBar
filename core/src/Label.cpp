@@ -2,8 +2,6 @@
 
 #include <cassert>
 
-#include <SDL3/SDL.h>
-
 #include <core/SkCanvas.h>
 #include <core/SkData.h>
 #include <core/SkFont.h>
