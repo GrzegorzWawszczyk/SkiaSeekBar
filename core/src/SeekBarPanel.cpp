@@ -110,6 +110,7 @@ namespace ssb::core
 		m_playButton->setActive(true);
 		m_playButton->setPlaying(false);
 		m_playState.setDuration(msecsDuration);
+		m_playState.pause();
 	}
 
 	void SeekBarPanel::drawItem(SkCanvas* canvas)
