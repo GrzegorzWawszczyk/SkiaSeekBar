@@ -24,7 +24,7 @@ namespace ssb::core
 
 	void App::InitScene()
 	{
-		m_seekBarScene = std::make_shared<SeekBarScene>();
+		m_seekBarScene = std::make_shared<SeekBarScene>(m_renderer->getWindowWidth(), m_renderer->getWindowHeight());
 		m_renderer->setDrawable(m_seekBarScene);
 		m_inputHandler->setInteractive(m_seekBarScene);
 	}
@@ -37,7 +37,13 @@ namespace ssb::core
 			while (SDL_PollEvent(&event))
 			{
 				if (event.type == SDL_EVENT_QUIT)
+				{
 					running = false;
+				}
+				if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_AC_BACK)
+				{
+					running = false;
+				}
 
 				m_inputHandler->handleSDLEvent(event);
 			}
@@ -45,7 +51,7 @@ namespace ssb::core
 			m_renderer->draw();
 			m_renderer->presentToSDL();
 
-			SDL_Delay(16); // ~60 FPS
+			SDL_Delay(16);
 		}
 	}
 }

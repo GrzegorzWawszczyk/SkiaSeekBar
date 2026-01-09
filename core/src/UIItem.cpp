@@ -2,7 +2,7 @@
 
 #include <ranges>
 
-#include <include/core/SkCanvas.h>
+#include <core/SkCanvas.h>
 
 namespace ssb::core
 {
@@ -34,6 +34,10 @@ namespace ssb::core
 
 	InputEventResult UIItem::tryConsumeInput(const InputPointerEvent& inputPointerEvent, int xOffset, int yOffset)
     {
+		if (inputPointerEvent.type == InputPointerEvent::Type::Down)
+		{
+			int a = 5;
+		}
 		for (auto& child : children | std::views::reverse)
 		{
 			const auto inputEventResult = child->tryConsumeInput(inputPointerEvent, xOffset + m_x, yOffset + m_y);
@@ -43,18 +47,17 @@ namespace ssb::core
 			}
 		}
 
-		const auto isHit = hitTest(inputPointerEvent, xOffset, yOffset);
-        if (reservingInput() || isHit) {
+        if (checkIncomingInputId(inputPointerEvent.id) || hitTest(inputPointerEvent, xOffset, yOffset)) {
             switch (inputPointerEvent.type)
 			{
 				case InputPointerEvent::Type::Down:
-					onInputPointerDown(inputPointerEvent);
+					onInputPointerDown(inputPointerEvent, xOffset, yOffset);
 					break;
 				case InputPointerEvent::Type::Up:
-					onInputPointerUp(inputPointerEvent, isHit);
+					onInputPointerUp(inputPointerEvent, xOffset, yOffset);
 					break;
 				case InputPointerEvent::Type::Move:
-					onInputPointerMove(inputPointerEvent, isHit);
+					onInputPointerMove(inputPointerEvent, xOffset, yOffset);
 					break;
 				case InputPointerEvent::Type::Cancel:
 					break;

@@ -1,17 +1,20 @@
 #pragma once
 
-#include "UIItem.hpp"
-#include "include/core/SkFont.h"
-#include "include/core/SkPaint.h"
-#include "include/core/SkTypeface.h"
-#include "include/core/SkFontMgr.h"
 #include <string>
+
+#include <core/SkFont.h>
+#include <core/SkPaint.h>
+#include <core/SkTypeface.h>
+#include <core/SkFontMgr.h>
+
+#include "UIItem.hpp"
+#include "colors/UIColors.hpp"
 
 namespace ssb::core {
 
     class Label : public UIItem {
     public:
-        Label(unsigned int width = 0, unsigned int height = 0, int x = 0, int y = 0, std::string text = "", float fontSize = 16.0f, SkColor color = SK_ColorBLACK);
+        Label(unsigned int width = 0, unsigned int height = 0, int x = 0, int y = 0, std::string text = "", float fontSize = 16.0f, SkColor color = UIColors::Text);
 
         void setText(const std::string& text);
         void setColor(SkColor color);

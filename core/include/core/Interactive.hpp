@@ -34,10 +34,16 @@ namespace ssb::core
     {
     public:
         virtual bool hitTest(const InputPointerEvent& inputPointerEvent, int xOffset = 0, int yOffset = 0) const { return false; }
-        virtual bool reservingInput() const { return false; }
-        virtual void onInputPointerDown(const InputPointerEvent& inputPointerEvent) {}
-        virtual void onInputPointerUp(const InputPointerEvent& inputPointerEvent, bool stillIn) {}
-        virtual void onInputPointerMove(const InputPointerEvent& inputPointerEvent, bool stillIn) {}
+        bool reservingInput() const { return m_savedInputId.has_value(); }
+        void saveInputId(int inputId) { m_savedInputId = inputId; }
+        bool checkIncomingInputId(int inputId) const { return m_savedInputId && m_savedInputId.value() == inputId; }
+        void clearSavedInputId() { m_savedInputId = std::nullopt; }
+        virtual void onInputPointerDown(const InputPointerEvent& inputPointerEvent, int xOffset = 0, int yOffset = 0) {}
+        virtual void onInputPointerUp(const InputPointerEvent& inputPointerEvent, int xOffset = 0, int yOffset = 0) {}
+        virtual void onInputPointerMove(const InputPointerEvent& inputPointerEvent, int xOffset = 0, int yOffset = 0) {}
         virtual InputEventResult tryConsumeInput(const InputPointerEvent& inputPointerEvent, int xOffset = 0, int yOffset = 0) { return { false, std::nullopt }; }
+
+    private:
+        std::optional<int> m_savedInputId = std::nullopt;
     };
 }

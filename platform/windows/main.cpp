@@ -4,7 +4,7 @@
 
 #include <SDL3/SDL.h>
 
-#include "App.hpp"
+#include "core/App.hpp"
 
 int main(int, char**) {
     ssb::core::App app;

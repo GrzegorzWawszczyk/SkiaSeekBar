@@ -1,17 +1,22 @@
-add_library(core STATIC
-    App.hpp App.cpp
-    Button.hpp Button.cpp
-    Drawable.hpp Drawable.cpp
-    Interactive.hpp
-    Label.hpp Label.cpp
-    Rect.hpp Rect.cpp
-    Renderer.hpp Renderer.cpp
-    SDLInputHandler.hpp SDLInputHandler.cpp
-    SeekBarScene.hpp SeekBarScene.cpp
-    UIItem.hpp UIItem.cpp
+file(GLOB_RECURSE CORE_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+file(GLOB_RECURSE CORE_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
+)
+
+add_library(core STATIC
+    ${CORE_SRC}
+    ${CORE_HEADERS}
+)
+
+target_include_directories(core
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/core
+)
 
 target_link_libraries(core PUBLIC
     SDL3::SDL3

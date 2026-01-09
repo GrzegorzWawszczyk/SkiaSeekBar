@@ -1,6 +1,6 @@
 #include "Drawable.hpp"
 
-#include <include/core/SkCanvas.h>
+#include <core/SkCanvas.h>
 
 namespace ssb::core
 {

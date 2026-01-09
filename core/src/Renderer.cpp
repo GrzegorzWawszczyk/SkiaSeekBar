@@ -3,11 +3,11 @@
 
 #include <SDL3/SDL.h>
 
-#include <include/core/SkCanvas.h>
-#include <include/core/SkColor.h>
-#include <include/core/SkImageInfo.h>
-#include <include/core/SkPixmap.h>
-#include <include/core/SkSurface.h>
+#include <core/SkCanvas.h>
+#include <core/SkColor.h>
+#include <core/SkImageInfo.h>
+#include <core/SkPixmap.h>
+#include <core/SkSurface.h>
 
 
 namespace ssb::core
@@ -18,10 +18,10 @@ namespace ssb::core
             "SkiaSeekBar",
 #ifdef __ANDROID__
             0, 0,
-            SDL_WINDOW_FULLSCREEN
+            0
 #else
             576, 1133,
-            SDL_WINDOW_RESIZABLE
+            SDL_WINDOW_ALWAYS_ON_TOP
 #endif
         );
 

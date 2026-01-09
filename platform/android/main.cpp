@@ -4,7 +4,7 @@
 
 #include <GLES3/gl3.h>
 
-#include "App.hpp"
+#include "core/App.hpp"
 
 extern "C" int SDL_main(int, char**)
 {

@@ -5,7 +5,7 @@
 
 #include <SDL3/SDL.h>
 
-#include "include/core/SkRefCnt.h"
+#include <core/SkRefCnt.h>
 
 #include "Drawable.hpp"
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UIItem.hpp"
+#include <core/SkColor.h>
 
-#include <include/core/SkColor.h>
+#include "UIItem.hpp"
 
 class SkCanvas;
 

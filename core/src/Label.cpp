@@ -4,29 +4,28 @@
 
 #include <SDL3/SDL.h>
 
-#include "include/core/SkCanvas.h"
-
-#include "include/core/SkData.h"
-#include "include/core/SkFont.h"
-#include "include/core/SkFontMetrics.h"
-#include "include/ports/SkFontMgr_data.h"
-#include "include/core/SkFontScanner.h"
-#include "include/core/SkPaint.h"
-#include "include/core/SkTypeface.h"
+#include <core/SkCanvas.h>
+#include <core/SkData.h>
+#include <core/SkFont.h>
+#include <core/SkFontMetrics.h>
+#include <core/SkFontScanner.h>
+#include <core/SkPaint.h>
+#include <core/SkTypeface.h>
+#include <ports/SkFontMgr_data.h>
 
 #include "fonts/Roboto-Regular.hpp"
 
 namespace
 {
-    sk_sp<SkTypeface> s_typeface;
+    sk_sp<SkTypeface> sTypeface;
 
-    void LoadUIFont()
+    void loadUIFont()
     {
         sk_sp<SkData> fontData = SkData::MakeWithoutCopy(Roboto_Regular_ttf, Roboto_Regular_ttf_len);
         sk_sp<SkData> fonts[] = { fontData };
         SkSpan<sk_sp<SkData>> span(fonts, 1);
         sk_sp<SkFontMgr> fontMgr = SkFontMgr_New_Custom_Data(span);
-        s_typeface = fontMgr->legacyMakeTypeface(nullptr, SkFontStyle());
+        sTypeface = fontMgr->legacyMakeTypeface(nullptr, SkFontStyle());
     }
 }
 
@@ -36,12 +35,12 @@ namespace ssb::core {
         , m_text(text)
         , m_color(color)
     {
-        if (!s_typeface) {
-            LoadUIFont();
-            assert(s_typeface && "Failed to load UI font!");
+        if (!sTypeface) {
+            loadUIFont();
+            assert(sTypeface && "Failed to load UI font!");
         }
 
-        m_font = SkFont(s_typeface, 16.0f);
+        m_font = SkFont(sTypeface, fontSize);
         m_font.setEdging(SkFont::Edging::kSubpixelAntiAlias);
 
         m_paint.setAntiAlias(true);
@@ -76,12 +75,7 @@ namespace ssb::core {
         if (!visible() || m_text.empty())
            return;
 
-        SkRect rect = SkRect::MakeXYWH(
-           (float)m_x,
-           (float)m_y,
-           (float)m_width,
-           (float)m_height
-        );
+        SkRect rect = SkRect::MakeXYWH(0, 0, m_width, m_height);
 
         SkFontMetrics metrics;
         m_font.getMetrics(&metrics);
@@ -91,7 +85,6 @@ namespace ssb::core {
 
         float textX = rect.centerX() - textWidth / 2;
         float textY = rect.centerY() - (metrics.fAscent + metrics.fDescent) / 2;
-
 
         m_paint.setAlphaf(m_opacity);
         canvas->drawString(m_text.c_str(), textX, textY, m_font, m_paint);
