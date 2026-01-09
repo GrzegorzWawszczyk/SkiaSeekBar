@@ -7,9 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ANDROID_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-# ABI które obsługujemy
-ABIS=("arm64-v8a")
-# ABIS=("arm64-v8a" "x86_64")
+ABIS=("arm64-v8a" "x86_64")
 
 JNI_DIR="$SCRIPT_DIR/app/src/main/jniLibs"
 
@@ -43,3 +41,18 @@ fi
 echo
 echo "APK generated:"
 echo "$SCRIPT_DIR/app/build/outputs/apk/$MODE/app-$MODE.apk"
+
+BIN_APK_DIR="$SCRIPT_DIR/bin"
+mkdir -p "$BIN_APK_DIR"
+
+APK_SRC="$SCRIPT_DIR/app/build/outputs/apk/$MODE/app-$MODE.apk"
+APK_DST="$BIN_APK_DIR/app-$MODE.apk"
+
+if [ -f "$APK_SRC" ]; then
+    cp "$APK_SRC" "$APK_DST"
+    echo
+    echo "APK copied to: $APK_DST"
+else
+    echo "APK not found: $APK_SRC"
+    exit 1
+fi
